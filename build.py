@@ -162,9 +162,9 @@ html = html.replace('for 🇨🇭 Tour de Suisse', 'for 🇫🇷 Critérium du D
 html = html.replace('for 🇫🇷 Critérium du Dauphiné', 'for 🇫🇷 Critérium du Dauphiné')  # noop
 # Made for emoji line
 html = html.replace('Made for 🇫🇷 Critérium du Dauphiné', 'Made for 🇫🇷 Critérium du Dauphiné')
-# Finale emoji labels: TdS used 🇨🇭 CONQUEROR + 🏔️ ALPINE
+# Finale emoji labels: TdS used 🇨🇭 CONQUEROR + 🏔 ALPINE
 html = html.replace('🇨🇭 CONQUEROR', '🇫🇷 DOMINATOR')
-html = html.replace('🏔️ ALPINE', '🏔️ ALPINE')  # keep — alpine works for Dauphiné too
+html = html.replace('🏔 ALPINE', '🏔 ALPINE')  # keep — alpine works for Dauphiné too
 
 # === 11) Stage type label adjustments ===
 # CdD stage types: 1 ITT + 1 flat + 1 hills + 4 mountain + 1 ITT (wait that's 2 ITTs)
@@ -228,6 +228,27 @@ html = html.replace('helvetia', 'hexagone')
 # TdS used 84-94. CdD has same stage count + similar elite climbers/TTs, so same AI
 # (Already done by inheriting from TdS template)
 
+# Keep gameplay fixes in generated output.
+html = html.replace('width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no', 'width=device-width, initial-scale=1.0')
+html = html.replace('const ERA_NAMES = {', 'DRIVERS.forEach(d => { d.id = `${d.era}:${d.name}`; });\n\nconst ERA_NAMES = {')
+html = html.replace('  .driver-card:hover', '  button.driver-card {\n    color: inherit;\n    font: inherit;\n    text-align: left;\n  }\n  .driver-card:hover')
+html = html.replace('  .btn-row .btn { flex: 1; }', '  .btn-row .btn { flex: 1; }\n  .btn-row[hidden] { display: none; }')
+html = html.replace('  .roster-chip {', '  .roster-chip {\n    border: none;\n    font-family: inherit;')
+html = html.replace("const card = document.createElement('div');", "const card = document.createElement('button');\n        card.type = 'button';\n        card.disabled = drafted;")
+html = html.replace("const chip = document.createElement('span');", "const chip = document.createElement('button');\n            chip.type = 'button';\n            chip.setAttribute('aria-label', `Remove ${d.name}`);")
+html = html.replace('Pick 5 MotoGP legends', 'Pick 5 cycling legends')
+html = html.replace('Tap a driver to draft. Mix eras for synergy bonuses.', 'Tap a rider to draft. Match eras for synergy bonuses.')
+html = html.replace('n < 6', 'n < 5')
+html = html.replace('${n}/5 drivers drafted', '${n}/5 riders drafted')
+html = html.replace('${6 - n}', '${5 - n}')
+html = html.replace('🏎\ufe0f Roster Complete!', 'Roster Complete!')
+html = html.replace('bonuses[raceType]', 'bonuses[raceType.toLowerCase()]')
+html = html.replace('    showNextRace();\n};\n\nfunction showNextRace', "    for (const id of ['season-wins', 'season-streak', 'season-points']) {\n        $(id).textContent = '0';\n    }\n    showNextRace();\n};\n\nfunction showNextRace")
+html = html.replace('${race.city} · ${race.type}', '${race.desc} · ${race.type}')
+html = html.replace('Full Season Log (All 21 Stages)', 'Full Season Log (All 8 Stages)')
+html = html.replace('    // Real stages: 8 stages total, 1 rest day, so 20 actual race stages\n    // Player can win up to 20 stages (skips rest day). Perfect = "21-0" since the goal is to "complete the Tour undefeated" (rest day doesn\'t count as a loss)\n    const totalStages = SCHEDULE.length;\n    const losses = totalStages - 1 - wins;  // rest day is not a loss\n    const record = `${wins}-${losses}`;\n\n    $(\'finale-record\').textContent = `${totalStages}-0`;  // Display as "21-0" perfect = "won every stage"\n    $(\'share-record\').textContent = `${totalStages}-0`;\n\n    // Title\n    let title = \'\';\n    if (wins === 20) title = `🏆 UNDEFEATED — ${totalStages}-0 GRAND CHELEM!`;\n    else if (wins >= 17) title = `🏆 ELITE — ${wins} stage wins`;\n    else if (wins >= 14) title = `🇫🇷 DOMINATOR — ${wins} stage wins`;\n    else if (wins >= 10) title = `🏔\ufe0f ALPINE — ${wins} stage wins`;\n    else title = `${wins} stage wins — Try a stronger roster next time`;\n    $(\'finale-title\').textContent = title;\n\n    // Badges\n    let badgesHTML = \'\';\n    if (wins === 20) badgesHTML += \'<span class="badge gold">⭐ Maillot Jaune Sweep — Every Stage</span>\';\n    if (state.season.bestStreak >= 6) badgesHTML += `<span class="badge green">🔥 ${state.season.bestStreak}-Race Streak</span>`;\n    if (wins >= 13) badgesHTML += \'<span class="badge green">Title Contender</span>\';\n    if (wins < 6) badgesHTML += \'<span class="badge red">Rebuild Year</span>\';\n    $(\'finale-badges\').innerHTML = badgesHTML;\n\n', '    const totalStages = SCHEDULE.filter(r => r.type !== \'rest\').length;\n    const losses = totalStages - wins;\n    const record = `${wins}-${losses}`;\n\n    $(\'finale-record\').textContent = record;\n    $(\'share-record\').textContent = record;\n\n    $(\'finale-title\').textContent = wins === totalStages\n        ? `🏆 UNDEFEATED — ${record} GRAND CHELEM!`\n        : `${wins} stage wins — ${losses} losses`;\n\n    let badgesHTML = \'\';\n    if (wins === totalStages) badgesHTML += \'<span class="badge gold">⭐ Maillot Jaune Sweep — Every Stage</span>\';\n    if (state.season.bestStreak >= 6) badgesHTML += `<span class="badge green">🔥 ${state.season.bestStreak}-Race Streak</span>`;\n    if (wins < totalStages / 2) badgesHTML += \'<span class="badge red">Rebuild Year</span>\';\n    $(\'finale-badges\').innerHTML = badgesHTML;\n\n')
+html = html.replace('\ufe0f', '')
+
 # === 17) Save ===
 with open(OUT, 'w') as f:
     f.write(html)
@@ -270,6 +291,6 @@ leakage = [
 for s, sev in leakage:
     n = html.count(s)
     if n > 0:
-        print(f"    ⚠️  {s} count={n} (severity={sev})")
+        print(f"    ⚠  {s} count={n} (severity={sev})")
     else:
         print(f"    ✅ {s} count=0 (clean)")

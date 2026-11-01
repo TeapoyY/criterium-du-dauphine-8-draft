@@ -45,7 +45,7 @@ The Critérium du Dauphiné is France's premier pre-Tour stage race (1947-presen
 
 This is the **14th** variant in the X-0 Sports Draft matrix:
 
-🏈 [NFL 38-0](https://github.com/TeapoyY/squad-draft-football) · 🏁 [NASCAR Cup 36-0](https://github.com/TeapoyY/nascar-36-draft) · 🚴 [Tour de France 21-0](https://github.com/TeapoyY/tour-de-france-21-draft) · 🏎️ [IndyCar 17-0](https://github.com/TeapoyY/indycar-17-draft) · ⚡ [Formula E 17-0](https://github.com/TeapoyY/formulae-17-draft) · 🏍️ [MotoGP 20-0](https://github.com/TeapoyY/motogp-20-draft) · 🏁 [Endurance 24-0](https://github.com/TeapoyY/endurance-24-draft) · 🏔️ [WRC 13-0](https://github.com/TeapoyY/wrc-13-draft) · 🌹 [Giro d'Italia 23-0](https://github.com/TeapoyY/giro-23-draft) · 🔴 [Vuelta a España 21-0](https://github.com/TeapoyY/vuelta-21-draft) · 🇨🇭 [Tour de Suisse 8-0](https://github.com/TeapoyY/tour-de-suisse-8-draft) · 8-0 🇫🇷 (Critérium du Dauphiné)
+🏈 [NFL 38-0](https://github.com/TeapoyY/squad-draft-football) · 🏁 [NASCAR Cup 36-0](https://github.com/TeapoyY/nascar-36-draft) · 🚴 [Tour de France 21-0](https://github.com/TeapoyY/tour-de-france-21-draft) · 🏎 [IndyCar 17-0](https://github.com/TeapoyY/indycar-17-draft) · ⚡ [Formula E 17-0](https://github.com/TeapoyY/formulae-17-draft) · 🏍 [MotoGP 20-0](https://github.com/TeapoyY/motogp-20-draft) · 🏁 [Endurance 24-0](https://github.com/TeapoyY/endurance-24-draft) · 🏔 [WRC 13-0](https://github.com/TeapoyY/wrc-13-draft) · 🌹 [Giro d'Italia 23-0](https://github.com/TeapoyY/giro-23-draft) · 🔴 [Vuelta a España 21-0](https://github.com/TeapoyY/vuelta-21-draft) · 🇨🇭 [Tour de Suisse 8-0](https://github.com/TeapoyY/tour-de-suisse-8-draft) · 8-0 🇫🇷 (Critérium du Dauphiné)
 
 ## Files
 

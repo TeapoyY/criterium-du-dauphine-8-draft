@@ -1,6 +1,6 @@
 
 const fs = require('fs');
-const html = fs.readFileSync('/tmp/build_dauphine/output.html', 'utf8');
+const html = fs.readFileSync(__dirname + '/output.html', 'utf8');
 const m = html.match(/<script>([\s\S]*?)<\/script>/);
 const code = m[1];
 
@@ -15,6 +15,7 @@ const fakeEl = {
     value: '',
     getContext: () => fakeCtx,
     width: 480, height: 360,
+    setAttribute: noop,
     addEventListener: noop
 };
 
@@ -77,3 +78,57 @@ for (const ovr of [80, 90, 95, 99]) {
     }
     console.log("OVR " + ovr + ": " + wins + "/50 mountain wins (" + (wins*2).toFixed(0) + "%)");
 }
+
+// Regression checks for draft, replay totals, and schedule-based finale.
+const assert = require('assert');
+const elements = new Map();
+function element(tagName) {
+    return {
+        ...fakeEl, tagName, style: {}, children: [], attributes: {},
+        appendChild(child) { this.children.push(child); },
+        setAttribute(name, value) { this.attributes[name] = value; }
+    };
+}
+const doc = {
+    getElementById(id) {
+        if (!elements.has(id)) elements.set(id, element('div'));
+        return elements.get(id);
+    },
+    createElement: element
+};
+const game = new Function('document', code + `;
+    return { DRIVERS, SCHEDULE, winProb, draftDriver, undraftDriver, showFinale,
+        get state() { return state; } };
+`)(doc);
+assert.equal(new Set(game.DRIVERS.map(d => d.id)).size, 84);
+assert.equal(game.SCHEDULE.length, 8);
+assert.equal(game.winProb(90, 'ITT'), game.winProb(90, 'itt'));
+for (const d of game.DRIVERS.slice(0, 5)) game.draftDriver(d);
+assert.equal(game.state.drafted.length, 5);
+assert.equal(doc.getElementById('count-text').textContent, 'Roster Complete!');
+assert.equal(doc.getElementById('start-btn').disabled, false);
+const card = doc.getElementById('driver-grid').children.at(-14);
+assert.equal(card.tagName, 'button');
+assert.equal(card.disabled, true);
+const chip = doc.getElementById('draft-status').children.at(-1).children[0];
+assert.equal(chip.tagName, 'button');
+assert.match(chip.attributes['aria-label'], /^Remove /);
+chip.onclick();
+assert.equal(game.state.drafted.length, 4);
+assert.match(doc.getElementById('help-text').textContent, /Pick 1 more/);
+game.draftDriver(game.DRIVERS[0]);
+for (const id of ['season-wins', 'season-streak', 'season-points']) doc.getElementById(id).textContent = '99';
+doc.getElementById('start-btn').onclick();
+for (const id of ['season-wins', 'season-streak', 'season-points']) assert.equal(doc.getElementById(id).textContent, '0');
+assert.equal(doc.getElementById('race-next-row').hidden, true);
+assert.equal(doc.getElementById('race-track').textContent, game.SCHEDULE[0].desc + ' · ITT');
+for (const wins of [0, 3, 4, 8]) {
+    game.state.season.playerWins = wins;
+    game.showFinale();
+    assert.equal(doc.getElementById('finale-record').textContent, `${wins}-${8 - wins}`);
+    assert.equal(doc.getElementById('share-record').textContent, `${wins}-${8 - wins}`);
+    assert.equal(doc.getElementById('finale-title').textContent.includes('UNDEFEATED'), wins === 8);
+    assert.equal(doc.getElementById('finale-badges').innerHTML.includes('Sweep'), wins === 8);
+    assert.equal(doc.getElementById('finale-badges').innerHTML.includes('Rebuild'), wins < 4);
+}
+console.log('Regression checks passed');
